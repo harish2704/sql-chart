@@ -1,0 +1,2 @@
+
+DB_CONNECTION=postgresql://postgres@localhost/postgres

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- This file is shamelessly copied from https://github.com/nicolaskruchten/pivottable/blob/master/examples/plotly.html -->
+    <title>Pivot Demo</title>
+    <!-- external libs from cdnjs -->
+    <script src="https://cdn.plot.ly/plotly-basic-latest.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    <!-- PivotTable.js libs from ../dist -->
+    <link rel="stylesheet" type="text/css" href="./css/pivot.css">
+    <script type="text/javascript" src="./js/pivot.js"></script>
+    <script type="text/javascript" src="./js/plotly_renderers.js"></script>
+    <style>
+      body {font-family: Verdana;}
+    </style>
+
+  </head>
+  <body>
+    <form action="" method="get" accept-charset="utf-8" onsubmit="return applySQL()">
+      <label for="">SQL Query</label>
+      <textarea  name="q" id="txt_sql" rows="6" cols="80" placeholder="Enter SQL query"></textarea>
+      <button type="submit">Submit</button>
+    </form>
+    <script type="text/javascript">
+      // This example adds Plotly chart renderers.
+
+      $(function(){
+
+        var derivers = $.pivotUtilities.derivers;
+        var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
+        var API = '/api/data';
+        var params = document.location.hash.length > 1 ? JSON.parse( decodeURIComponent( document.location.hash.slice(1) ) ) : {};
+        var sql = params.q;
+        var conf = params.c || {};
+        $('#txt_sql').val(sql)
+
+        function updateUrl(){
+          document.location.hash = JSON.stringify( params );
+        }
+
+        window.applySQL = function(){
+          params.q = $('#txt_sql').val();
+          updateUrl();
+          loadData();
+          return false;
+        }
+
+        function loadData(){
+          var sql =  params.q;
+          if( !sql ){
+            console.log( 'Empty sql' );
+            return;
+          }
+          console.log( "SQL", sql );
+          var data = { q: sql };
+          $.getJSON( API, data, function(mps) {
+            console.log( mps );
+            $("#output").pivotUI(mps, Object.assign( {
+              renderers: renderers,
+              rendererName: "Horizontal Stacked Bar Chart",
+              rowOrder: "value_a_to_z", colOrder: "value_z_to_a",
+              onRefresh: function( config ){
+                var confData = ["aggregatorName", "colOrder", "cols", "rendererName", "rowOrder", "rows", "vals"]
+                  .reduce( ( acc, v ) => { acc[v] = config[v]; return acc; }, {} )
+                params.c = confData;
+                updateUrl();
+              }
+            }, conf ));
+          });
+        }
+        loadData();
+      });
+    </script>
+
+    <div id="output" style="margin: 30px;"></div>
+
+  </body>
+</html>
