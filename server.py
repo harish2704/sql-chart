@@ -6,7 +6,7 @@ import datetime
 import os
 
 db_url = os.environ[ 'DB_CONNECTION' ] if 'DB_CONNECTION' in os.environ else 'postgresql://postgres@localhost/postgres'
-eng = sqlalchemy.create_engine(db_url, pool_size=1, pool_recycle=3600)
+eng = sqlalchemy.create_engine(db_url, pool_recycle=3600)
 conn = eng.connect()
 print "Connected to db"
 
