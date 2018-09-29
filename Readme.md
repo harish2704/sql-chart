@@ -22,6 +22,10 @@ pip2 install -r requirements.txt --user
 ./run.sh
 ```
 
+## Screencast
+![Screencast](https://github.com/harish2704/harish2704.github.io/blob/master/sql-chart/screencast.gif?raw=true "sql-chart quick usage")
+
+[Watch video](http://bit.ly/2y0J8QL)
 
 ## Thanks
 * Authors of pivottable ( https://github.com/nicolaskruchten/pivottable ). The UI code is shamelessly copied from one of the examples given in this project.
