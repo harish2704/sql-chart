@@ -1,2 +1,3 @@
 
 DB_CONNECTION=postgresql://postgres@localhost/postgres
+BIND_ADDRESS=127.0.0.1:8000

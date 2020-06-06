@@ -22,6 +22,12 @@ class QResource:
         resp.set_header('content-type', 'application/json; charset=UTF-8')
         resp.body = json.dumps( data, default=str )
 
+
+class RedirectingResource:
+    def on_get(self, req, resp):
+        raise falcon.HTTPMovedPermanently('/index.html')
+
 api = falcon.API()
+api.add_route('/', RedirectingResource())
 api.add_static_route('/', os.path.dirname(os.path.realpath(__file__)) + '/static' )
 api.add_route('/api/data', QResource())
